@@ -53,4 +53,36 @@ class PaymentStatusControllersTest {
         verify(paymentStatusService, times(1)).getPaymentStatusNameById(1);
     }
 
+    @Test
+    void getPaymentStatusNameById_WhenUnexpectedException_ShouldThrowHttpServerErrorException() {
+        // Arrange
+        when(paymentStatusService.getPaymentStatusNameById(1)).thenThrow(
+                new RuntimeException("Unexpected null")
+        );
+
+        // Act & Assert
+        HttpServerErrorException exception = assertThrows(HttpServerErrorException.class, () -> {
+            paymentStatusControllers.getPaymentStatusNameById(1);
+        });
+
+        assertEquals("500 Unexpected error", exception.getMessage());
+        verify(paymentStatusService, times(1)).getPaymentStatusNameById(1);
+    }
+
+    @Test
+    void getPaymentStatusNameById_WhenHttpServerErrorExceptionThrown_ShouldWrapAndThrow() {
+        when(paymentStatusService.getPaymentStatusNameById(1)).thenThrow(
+                new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "DB error")
+        );
+
+        HttpServerErrorException exception = assertThrows(HttpServerErrorException.class, () -> {
+            paymentStatusControllers.getPaymentStatusNameById(1);
+        });
+
+        assertEquals("500 Error retrieving payment status", exception.getMessage());
+    }
+
+
+
+
 }
