@@ -17,7 +17,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(BadRequestException.class)
     //Metodo que se encarga de manejar la respuesta de los servicios REST cada vez que se lance una BadRequestException
-    protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
 
         //Se crea un map que contendra la informacion de la respuesta en el body
         Map<String, Object> body = new LinkedHashMap<>();
